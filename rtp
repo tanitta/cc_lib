@@ -39,12 +39,14 @@ function newServer(side,address)
 		return status
 	end
 	obj.open=function(self,...)
-		for i,v in ipairs(...) do
+		local a={...}
+		for i,v in ipairs(a) do
 			self.modem.open(v)
 		end
 	end
 	obj.close=function(self,...)
-		for i,v in ipairs(...) do
+		local a={...}
+		for i,v in ipairs(a) do
 			self.modem.close(v)
 		end
 	end
