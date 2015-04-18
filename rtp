@@ -80,7 +80,9 @@ function newServer(side,address)
 	end
 	obj.transmit=function(self,to,port,message,code)
 		local status=self:newStatus(to,port,message,code)
-		to=math.floor(to/100)*100
+		if math.floor(to/100)*100~=self.address then
+			to=math.floor(to/100)*100
+		end
 		self.modem.transmit(to,self.address,status)
 	end
 	obj.transfar=function(self,status)
