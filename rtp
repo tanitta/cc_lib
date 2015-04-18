@@ -114,5 +114,12 @@ function newClient(side)
 			return false,"failed"
 		end
 	end
+	obj.isToMe=function(self,status)
+		local to=status.to
+		if to==99 then
+			return true
+		end
+		return to==self.address
+	end
 	return obj
 end
