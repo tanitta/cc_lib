@@ -38,6 +38,19 @@ function newServer(side,address)
 		status.code=code or 200 
 		return status
 	end
+	obj.open=function(self,...)
+		for v,i in ipair(...) do
+			self.modem.open(v)
+		end
+	end
+	obj.close=function(self,...)
+		for i,v in ipair(...) do
+			self.modem.close(v)
+		end
+	end
+	obj.closeAll=function(self)
+		self.modem.closeAll()
+	end
 	obj.ping=function(self,to,timeout)
 		self:transmit(to,0,"ping")
 		return getResponse(timeout)
