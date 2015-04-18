@@ -8,7 +8,7 @@ getResponse=function(timeout)
 	local response={}
 	local n=parallel.waitForAny(
 		function()
-			response={os.pullEvent("modem_message")
+			response={os.pullEvent("modem_message")}
 		end,
 		function()
 			sleep(timeout)
