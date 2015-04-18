@@ -86,7 +86,11 @@ function newServer(side,address)
 		self.modem.transmit(to,self.address,status)
 	end
 	obj.transfar=function(self,status)
-		self.modem.transmit(status.to,status.from,status)
+		local to=status.to
+		if math.floor(to/100)*100~=self.address then
+			to=math.floor(to/100)*100
+		end
+		self.modem.transmit(to,status.from,status)
 	end
 	obj.isToMe=function(self,status)
 		local to=status.to
