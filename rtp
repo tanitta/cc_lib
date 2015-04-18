@@ -1,7 +1,7 @@
 --Rednet Transfar Protocol Library--
 local ver="RednetTransfarProtocol ver0.9"
 function version()
-	print(var)
+	print(ver)
 end
 getResponse=function(timeout)
 	timeout=timeout or 1
