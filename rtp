@@ -95,7 +95,7 @@ function newServer(side,address)
 	return obj
 end
 function newClient(side)
-	local obj=newServer(side,6500)
+	local obj=newServer(side,65000)
 	obj.host={address=0,name=""}
 	obj.address=65000
 	obj.transmit=function(self,to,port,message,code)
