@@ -1,0 +1,103 @@
+--Rednet Transfar Protocol Library--
+local ver="RednetTransfarProtocol ver0.9"
+function version()
+	print(var)
+end
+getResponse=function(timeout)
+	timeout=timeout or 1
+	local response={}
+	local n=parallel.waitForAny(
+		function()
+			response={os.pullEvent("modem_message")
+		end,
+		function()
+			sleep(timeout)
+		end
+	)
+	if n==1 then
+		return true,response
+	else
+		return false,"no response"
+	end
+end
+
+function newServer(side,address)
+	obj={}
+	obj.modem=peripheral.wrap(side)
+	obj.side=side
+	obj.address=address
+	obj.name=os.getComputerLabel() or "Anonymous"
+	obj.modem.open(address)
+	obj.newStatus=function(self,to,port,message,code)
+		local status={}
+		status.version=ver
+		status.to=to
+		status.message=message
+		status.port=port
+		status.name=self.name
+		status.code=code or 200 
+		return status
+	end
+	obj.ping=function(self,to,timeout)
+		self:transmit(to,0,"ping")
+		return getResponse(timeout)
+	end
+	obj.findNearestHost=function(self)
+		local host
+		local b,t=self:ping(0)
+		if b then
+			host=t
+			for i=1,10 do
+				b,t=getResponse()
+				if b then
+					if t[6]<host[6] then
+						host=t
+					end
+				else
+					break
+				end
+			end
+			return true,host
+		else
+			return false,"no found host"
+		end
+	end
+	obj.transmit=function(self,to,port,message,code)
+		local status=self:newStatus(to,port,message,code)
+		self.modem.transmit(to,self.address,status)
+	end
+	obj.transfar=function(self,status)
+		self.modem.transmit(status.to,status.from,status)
+	end
+	obj.isToMe=function(self,status)
+		local to=status.to
+		if to==0 or to==99 then
+			return true
+		end
+		return to==self.address
+	end
+	return obj
+end
+function newClient(side)
+	local obj=newServer(side,6500)
+	obj.host={address=0,name=""}
+	obj.address=65000
+	obj.transmit=function(self,to,port,message,code)
+		local status=self:newStatus(to,port,message,code)
+		self.modem.transmit(self.host.address,self.address,status)
+	end
+	obj.getAddress=function(self)
+		local b,t=self:findNearestHost()
+		if b then
+			self:transmit(t[4],0,"assign address")
+			local b,t=getResponse()
+			if b then
+				self.address=t[5].message
+				return true,self.address
+			end
+		else
+			return false,"failed"
+		end
+	end
+	return obj
+end
