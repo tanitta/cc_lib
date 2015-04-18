@@ -35,6 +35,7 @@ function newServer(side,address)
 		status.message=message
 		status.port=port
 		status.name=self.name
+		status.from=self.address
 		status.code=code or 200 
 		return status
 	end
