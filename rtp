@@ -110,8 +110,8 @@ function newClient(side)
 			local b,t=getResponse()
 			if b then
 				self.address=t[5].message
-				host.address=t[5].from
-				host.name=t[5].name
+				self.host.address=t[5].from
+				self.host.name=t[5].name
 				self:close(65000)
 				self:open(self.address)
 				return true,self.address
