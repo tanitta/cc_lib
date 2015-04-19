@@ -1,10 +1,46 @@
 tick=0.05000000001
+local print_indent=function(indent)
+	for i=1,indent do
+		io.write("   ")
+	end
+end
+local table_print(table,indent)
+	indent=indent or 0
+	local flag=false
+	if table[1]==nil then
+		flag=true
+	end
+	print_indent(indent)
+	print("{")
+	for k,v in pairs(table) do
+		if type(v)~="table" then
+			print_indent(indent+1)
+			if flag then
+				io.write(k.."=")
+			end
+			print(tostring(v)..",")
+		else
+			table_print(v,indent+1)
+		end
+	end
+	print_indent(indent)
+	io.write("}")
+	if indent~=0 then
+		io.write(",")
+	end
+	io.write("\n")
+end
+
 print=function(...)
 	local a={...}
 	for i,v in ipairs(a) do
-		io.write(tostring(v))
-		if i~=#a then
-			io.write(" ")
+		if type(v)~="table" then
+			io.write(tostring(v))
+			if i~=#a then
+				io.write(" ")
+			end
+		else
+			table_print(v)
 		end
 	end
 	io.write("\n")
