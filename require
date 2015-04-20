@@ -43,12 +43,12 @@ function require(...)
 				break
 			end
 		end
+		if r ~= nil then
+			r()
+		else
+			msg = "[EE]error loading module '"..local_path.."' from file '"..LUA_PATH.."'"
+			print(msg)
+		end
 	end
 	
-	if r ~= nil then
-		r()
-	else
-		msg = "[EE]error loading module '"..local_path.."' from file '"..LUA_PATH.."'"
-		print(msg)
-	end
 end
