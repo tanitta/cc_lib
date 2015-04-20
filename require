@@ -1,0 +1,27 @@
+do
+	local ref = function(str, list, symbol)
+		if str ~= "" then
+			str:match(symbol)
+			return string, list
+		else 
+			return string, list
+		end
+	end
+	
+	function string.split(self,str)
+
+	end
+end
+__CURRENT_PATH__ = ""--shell.dir()
+-- 相対パスでの指定して読み込み
+require = nil or function(...)
+	local parameters = {...}
+	local tmp_path = __CURRENT_PATH__
+	
+	for index in pairs(parameters) do
+		parameter = parameters[index]
+		loadfile(__CURRENT_PATH__..parameter)()
+		print("path : "..__CURRENT_PATH__..parameter)
+	end
+	__CURRENT_PATH__ = tmp_path
+end
