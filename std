@@ -4,7 +4,7 @@ local print_indent=function(indent)
 		io.write("   ")
 	end
 end
-local table_print=function(table,indent)
+table_print=function(table,indent)
 	indent=indent or 0
 	local flag=false
 	if table[1]==nil then
@@ -40,7 +40,9 @@ print=function(...)
 				io.write(" ")
 			end
 		else
-			io.write("\n")
+			if i~=1 then
+				io.write("\n")
+			end
 			table_print(v)
 		end
 	end
