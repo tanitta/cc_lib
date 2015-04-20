@@ -1,27 +1,48 @@
-do
-	local ref = function(str, list, symbol)
-		if str ~= "" then
-			str:match(symbol)
-			return string, list
-		else 
-			return string, list
-		end
-	end
-	
-	function string.split(self,str)
+function table.elemn(tbl)
+    local n = 0
+    for _ in pairs (tbl) do
+        n = n + 1
+    end
+    return n
+end
 
+split = function(str, symbol)
+	local p = string.find(str, symbol)
+	if p ~= nil then
+		local dir_str =  string.sub(str, 1,p-1)
+		local next_str = string.sub(str, p+string.len(symbol))
+		local tab = {}
+		tab[1] = dir_str
+		insert_tab = split(next_str,symbol)
+		for i in pairs(insert_tab)do 
+			table.insert(tab,insert_tab[i])
+		end
+		return tab
+	elseif str ~= "" then
+		local tab = {}
+		tab[1] = str
+		return tab
+	else
 	end
 end
-__CURRENT_PATH__ = ""--shell.dir()
--- 相対パスでの指定して読み込み
+
+__CURRENT_PATH__ = ""
 require = nil or function(...)
 	local parameters = {...}
 	local tmp_path = __CURRENT_PATH__
 	
 	for index in pairs(parameters) do
 		parameter = parameters[index]
-		loadfile(__CURRENT_PATH__..parameter)()
-		print("path : "..__CURRENT_PATH__..parameter)
+		print("--loading : "..parameter.." --")
+		splited_path_table = split(parameter,"/")
+		filename = table.remove(splited_path_table)
+		dir = table.concat(splited_path_table,"/")
+		print(dir)
+		__CURRENT_PATH__ = __CURRENT_PATH__ .."/".. dir
+		print("loadpath : "..__CURRENT_PATH__.."/"..filename)
+		loadfile(__CURRENT_PATH__.."/"..filename)()
+		-- print("path : "..__CURRENT_PATH__..parameter)
+		print(dir)
+		__CURRENT_PATH__ = tmp_path
 	end
-	__CURRENT_PATH__ = tmp_path
 end
