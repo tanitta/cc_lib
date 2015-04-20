@@ -25,7 +25,8 @@ split = function(str, symbol)
 	else
 	end
 end
-function require(local_path)
+function require(...)
+	local_paths = {...}
 	-- local flag, ret, r = pcall(loadfile("/luaenv"))
 	-- if flag == false then
 	-- 	print("[!!]error loading LUA_PATH\ncannot read /luaenv")
@@ -35,10 +36,12 @@ function require(local_path)
 	-- LUA_PATH = getLuaPath()
 	LUA_PATH = "/cc_lib"
 	local splited_strs = split(LUA_PATH,":")
-	for i, v in pairs(splited_strs) do
-		r = loadfile(v.."/"..local_path)
-		if r~=nil then
-			break
+	for j, local_path in pairs(local_paths) do
+		for i, v in pairs(splited_strs) do
+			r = loadfile(v.."/"..local_path)
+			if r~=nil then
+				break
+			end
 		end
 	end
 	
