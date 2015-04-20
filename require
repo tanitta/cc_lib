@@ -1,3 +1,51 @@
-function require(...)
-	loadfile(...)()
+function table.elemn(tbl)
+    local n = 0
+    for _ in pairs (tbl) do
+        n = n + 1
+    end
+    return n
+end
+
+split = function(str, symbol)
+	local p = string.find(str, symbol)
+	if p ~= nil then
+		local dir_str =  string.sub(str, 1,p-1)
+		local next_str = string.sub(str, p+string.len(symbol))
+		local tab = {}
+		tab[1] = dir_str
+		insert_tab = split(next_str,symbol)
+		for i in pairs(insert_tab)do 
+			table.insert(tab,insert_tab[i])
+		end
+		return tab
+	elseif str ~= "" then
+		local tab = {}
+		tab[1] = str
+		return tab
+	else
+	end
+end
+function require(local_path)
+	-- local flag, ret, r = pcall(loadfile("/luaenv"))
+	-- if flag == false then
+	-- 	print("[!!]error loading LUA_PATH\ncannot read /luaenv")
+	-- 	break
+	-- else
+	-- end
+	-- LUA_PATH = getLuaPath()
+	LUA_PATH = "/cc_lib"
+	local splited_strs = split(LUA_PATH,":")
+	for i, v in pairs(splited_strs) do
+		r = loadfile(v.."/"..local_path)
+		if r~=nil then
+			break
+		end
+	end
+	
+	if r ~= nil then
+		r()
+	else
+		msg = "[EE]error loading module '"..local_path.."' from file '"..LUA_PATH.."'"
+		print(msg)
+	end
 end
