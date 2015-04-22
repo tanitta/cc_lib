@@ -111,7 +111,10 @@ function newClient(side)
 		self.modem.transmit(self.host.address,self.address,status)
 	end
 	obj.getAddress=function(self)
+		self:close(self.address)
 		self.address=65000
+		self:open(65000)
+		self.host={address=0,name=""}
 		local b,t=self:findNearestHost()
 		if b then
 			self:transmit(t[4],0,"assign address")
