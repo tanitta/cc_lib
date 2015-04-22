@@ -80,7 +80,7 @@ function newServer(side,address)
 	end
 	obj.transmit=function(self,to,port,message,code)
 		local status=self:newStatus(to,port,message,code)
-		if to<100 and math.floor(to/100)*100~=self.address then
+		if to>100 and math.floor(to/100)*100~=self.address then
 			to=math.floor(to/100)*100
 		end
 		self.modem.transmit(to,self.address,status)
@@ -110,6 +110,7 @@ function newClient(side)
 		self.modem.transmit(self.host.address,self.address,status)
 	end
 	obj.getAddress=function(self)
+		self.address=65000
 		local b,t=self:findNearestHost()
 		if b then
 			self:transmit(t[4],0,"assign address")
