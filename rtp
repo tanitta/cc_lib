@@ -1,5 +1,6 @@
 --Rednet Transfar Protocol Library--
 local ver="RednetTransfarProtocol ver0.9"
+local ver2="RTP0.9"
 function version()
 	print(ver)
 end
@@ -30,7 +31,7 @@ function newServer(side,address)
 	obj.modem.open(address)
 	obj.newStatus=function(self,to,port,message,code)
 		local status={}
-		status.version=ver
+		status.version=ver2
 		status.to=to
 		status.message=message
 		status.port=port
