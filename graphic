@@ -1,7 +1,7 @@
 os.loadAPI("cc_lib/std")
 local getSize=function(str)
 	local stry=std.matchCount(str,"\n")
-	local strs=std.splitter(str,"\n")
+	local strs=std.split(str,"\n")
 	local stra={}
 	for i,v in ipairs(strs) do
 		stra[i]=string.len(v)
