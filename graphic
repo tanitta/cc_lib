@@ -17,6 +17,7 @@ createButton=function(str,x,y,monSide)
 	mon=mon or term
 	local obj={}
 	obj.str=str
+	obj.mon=mon
 	obj.size={getSize(str)}
 	obj.pos={x,y}
 	mon.setCursorPos(x,y)
