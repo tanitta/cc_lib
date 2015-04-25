@@ -81,7 +81,7 @@ function newServer(side,address)
 		end
 	end
 	obj.transmit=function(self,to,port,message,code)
-		if type(to)=="string then
+		if type(to)=="string" then
 			to=self:lookup(to)
 		end
 		if to~=nil then
