@@ -111,7 +111,7 @@ function newServer(side,address)
 			self:transmit(DNS,0,t)
 			local a,b=getResponse()
 			if a then
-				return b.message
+				return b[5].message
 			end
 		end
 		return nil
