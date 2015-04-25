@@ -105,7 +105,7 @@ function newServer(side,address)
 		self.DNS={DNS1 or self.DNS[1],DNS2 or self.DNS[2]}
 	end
 	obj.lookup=function(self,name)
-		local DNS=self.DNS[i]
+		local DNS=self.DNS[1]
 		local t={"lookup",name}
 		self:transmit(DNS,0,t)
 		local a,b=getResponse()
