@@ -132,8 +132,15 @@ function newClient(side)
 	obj.host={address=0,name=""}
 	obj.address=65000
 	obj.transmit=function(self,to,port,message,code)
-		local status=self:newStatus(to,port,message,code)
-		self.modem.transmit(self.host.address,self.address,status)
+		if type(to)=="string" then
+			to=self:lookup(to)
+		end
+		if to~=nil then
+			local status=self:newStatus(to,port,message,code)
+			self.modem.transmit(self.host.address,self.address,status)
+		else
+			print("transmission failure")
+		end
 	end
 	obj.getAddress=function(self)
 		self:close(self.address)
