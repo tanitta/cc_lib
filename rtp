@@ -29,6 +29,7 @@ function newServer(side,address)
 	obj.address=address
 	obj.name=os.getComputerLabel() or "Anonymous"
 	obj.modem.open(address)
+	obj.DNS={10,11}
 	obj.newStatus=function(self,to,port,message,code)
 		local status={}
 		status.version=ver2
@@ -80,11 +81,18 @@ function newServer(side,address)
 		end
 	end
 	obj.transmit=function(self,to,port,message,code)
-		local status=self:newStatus(to,port,message,code)
-		if to>100 and math.floor(to/100)*100~=self.address then
-			to=math.floor(to/100)*100
+		if type(to)=="string then
+			to=self:lookup(to)
 		end
-		self.modem.transmit(to,self.address,status)
+		if to~=nil then
+			local status=self:newStatus(to,port,message,code)
+			if to>100 and math.floor(to/100)*100~=self.address then
+				to=math.floor(to/100)*100
+			end
+			self.modem.transmit(to,self.address,status)
+		else
+			print("transmission failure")
+		end
 	end
 	obj.transfar=function(self,status)
 		local to=status.to
@@ -92,6 +100,23 @@ function newServer(side,address)
 			to=math.floor(to/100)*100
 		end
 		self.modem.transmit(to,status.from,status)
+	end
+	obj.setDNS=function(self,DNS1,DNS2)
+		self.DNS={DNS1 or self.DNS[1],DNS2 or self.DNS[2]}
+	end
+	obj.lookup=function(self,name)
+		for i=1,2 do
+			local DNS=self.DNS[i]
+			local t={"lookup",name}
+			self:transmit(DNS,0,t)
+			local a,b=getResponse()
+			if a then
+				if type(b.message)==number then
+					return b.message
+				end
+			end
+		end
+		return nil
 	end
 	obj.isToMe=function(self,status)
 		local to=status.to
