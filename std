@@ -24,7 +24,7 @@ table_print=function(table,indent)
 				print("\""..v.."\"")
 			end
 		else
-			print_indent(inden)
+			print_indent(indent)
 			io.write(k.."=\n")
 			table_print(v,indent+1)
 		end
