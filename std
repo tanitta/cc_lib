@@ -18,8 +18,13 @@ table_print=function(table,indent)
 			if flag then
 				io.write(k.."=")
 			end
-			print(tostring(v)..",")
+			if type(v)~="string" then
+				print(tostring(v)..",")
+			else
+				print("\""..v.."\"")
+			end
 		else
+			io.write(k.."=")
 			table_print(v,indent+1)
 		end
 	end
