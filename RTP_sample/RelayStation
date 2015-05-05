@@ -1,0 +1,81 @@
+--Please put config file to root--
+os.loadAPI("cc_lib/rtp")
+os.loadAPI("cc_lib/std")
+if not fs.exists("config") then
+	print("put config file")
+	return
+end
+shell.run("config")
+ 
+ modem={}
+ print(grobalModemSide)
+ print(localModemSide)
+ print(wirelessLocalModemSide)
+ modem[grobalModemSide]=rtp.newServer(grobalModemSide,myAddress)
+ modem[localModemSide]=rtp.newServer(localModemSide,myAddress)
+ modem[wirelessLocalModemSide]=rtp.newServer(wirelessLocalModemSide,myAddress)
+ 
+ modem[grobalModemSide]:open(0)
+ modem[localModemSide]:open(0)
+ modem[wirelessLocalModemSide]:open(0)
+ 
+ connectList={}
+ modem[grobalModemSide]:transmit(10,0,{"add DNS",{os.getComputerLabel(),myAddress}})
+ 
+function main()
+	local a,b,c,d,e,f=os.pullEvent("modem_message")
+	if modem[b]:isToMe(e) then
+		local message=e.message
+		if e.port==0 then
+			if message=="ping" then
+				modem[b]:transmit(e.from,0,"ping echo")
+			end
+			if message=="assign address" and b~=grobalModemSide then
+				local assign=nil
+				local flag=true
+				for i,v in ipairs(connectList) do
+					if v.name==e.name then
+						modem[b]:transmit(e.from,0,v.address)
+						assign=v.address
+						flag=false
+						break
+					end
+				end
+				if flag then
+					local address=myAddress+#connectList+1
+					local t={}
+					t.address=address
+					t.name=e.name
+					t.side=b
+					table.insert(connectList,t)
+					std.print("assign adrdress:",address)
+					modem[b]:transmit(e.from,0,address)
+					assign=address
+				end
+				if assign~=nil then
+					local t={"add DNS",{e.name,assign}}
+					modem[grobalModemSide]:transmit(10,0,t)
+				end
+			end
+		end
+	else
+		local m
+		local flag=true
+		for i,v in ipairs(connectList)do
+			if v.address==e.to then
+				modem[v.side]:transfar(e)
+				flag=false
+				break
+			end
+		end
+		if flag and b~=groalModemSide then
+			modem[grobalModemSide]:transfar(e)
+		end
+	end
+end
+
+while(true)do
+	main()
+end
+			
+			

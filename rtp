@@ -84,6 +84,9 @@ function newServer(side,address)
 		if type(to)=="string" then
 			to=self:lookup(to)
 		end
+		if type(to)~="number" then
+				to=nil
+			end
 		if to~=nil then
 			local status=self:newStatus(to,port,message,code)
 			if to>100 and math.floor(to/100)*100~=self.address then

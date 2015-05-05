@@ -1,0 +1,37 @@
+args={...}
+if #args~=0 then
+	modemSide=args[1]
+else
+	modemSide="right"
+end
+mon=peripheral.wrap(modemSide)
+if mon==nil then
+	print("invalid side")
+	return
+end
+os.loadAPI("cc_lib/rtp")
+os.loadAPI("cc_lib/std")
+list={}
+list["DNS1"]=10
+list["DNS2"]=11
+m=rtp.newServer(modemSide,10)
+while(true)do
+	a,b,c,d,e,f=os.pullEvent("modem_message")
+	if m:isToMe(e) then
+		if e.port==0 then
+			if e.message=="ping" then
+				m:transmit(e.from,0,"ping echo")
+			elseif type(e.message)=="table" then
+				if e.message[1]=="add DNS" then
+					local t=e.message[2]
+					list[t[1]]=t[2]
+					m:transmit(11,0,e)
+				elseif e.message[1]=="lookup" then
+					if list[e.message[2]]~=nil then
+						m:transmit(e.from,0,list[e.message[2]])
+					end
+				end
+			end
+		end
+	end
+end
