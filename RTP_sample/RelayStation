@@ -1,6 +1,10 @@
 --Please put config file to root--
-os.loadAPI("cc_lib/rtp")
-os.loadAPI("cc_lib/std")
+if rtp==nil then
+	os.loadAPI("cc_lib/rtp")
+end
+if std==nil then
+	os.loadAPI("cc_lib/std")
+end
 if not fs.exists("config") then
 	print("put config file")
 	return
@@ -8,9 +12,6 @@ end
 shell.run("config")
  
  modem={}
- print(grobalModemSide)
- print(localModemSide)
- print(wirelessLocalModemSide)
  modem[grobalModemSide]=rtp.newServer(grobalModemSide,myAddress)
  modem[localModemSide]=rtp.newServer(localModemSide,myAddress)
  modem[wirelessLocalModemSide]=rtp.newServer(wirelessLocalModemSide,myAddress)
